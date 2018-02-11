@@ -23,13 +23,14 @@ public class LFIssueRegistry extends com.android.tools.lint.client.api.IssueRegi
 	public List<Issue> getIssues() {
 		System.out.println("###### LFIssueRegistry lint rules works ######");
 		return Arrays.asList(
-				FastJsonDetector.ISSUE
-				, ViewIdNameDetector.ISSUE
-				, ChineseStringDetector.ISSUE
-				, LoggerUsageDetector.ISSUE
-				, BaseActivityDetector.ISSUE
-				, ImageFileSizeDetector.ISSUE
-				, AcitvityShouldAddRouteInspection.ISSUE
+				AcitvityShouldAddRouteInspection.ISSUE
+//				, FastJsonDetector.ISSUE
+//				, ViewIdNameDetector.ISSUE
+//				, ChineseStringDetector.ISSUE
+//				, LoggerUsageDetector.ISSUE
+//				, BaseActivityDetector.ISSUE
+//				, ImageFileSizeDetector.ISSUE
+
 		);
 	}
 }

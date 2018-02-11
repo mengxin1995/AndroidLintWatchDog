@@ -46,4 +46,7 @@ dependencies {
 
 //    使用发布版本进行lint-check
 //    debugCompile 'com.qjoy:liblflintrules_aarwrap:1.0.3'
+
+    //Lint代码检查
+//    compile 'com.tuotuo.solo:tuoSoloLint:0.0.0.3'
 }

@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven'
+apply plugin: 'signing'
 
 android {
     compileSdkVersion 24
@@ -56,73 +56,31 @@ project.afterEvaluate {
     compileLintTask.dependsOn(copyLintJar)
 }
 
-/**
- * 上传&设置到bintray指令
- */
-// 提交到仓库中的版本号
+signing {
+    required {  gradle.taskGraph.hasTask("uploadArchives") }
+    sign configurations.archives
+}
 
-version = "1.0.6.1"
+//上传maven
+uploadArchives {
+    configuration = configurations.archives
+    repositories.mavenDeployer {
+        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+        repository(url: 'http://192.168.3.1:8081/nexus/content/repositories/android/') {
+            //仓库地址
+            authentication(userName: "admin",//用户名
+                    password: "20140919")//密码
+        }
 
-def siteUrl = 'current null' // 项目的主页，换成自己的
-def gitUrl = 'current null' // Git仓库的url
-group = "com.qjoy" //这个地址是将来compile引用的地址
-install {
-    repositories.mavenInstaller {
-        pom {
-            project {
-                packaging 'aar'
-                name 'qjoy lint rules checker' //项目描述
-                url siteUrl
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-                developers {
-                    developer {//填写的一些开发者的基本信息
-                        id 'AlexQ' //填写开发者的id
-                        name 'AlexQ' //填写开发者的name
-                        email 'alexq_andr@163.com' //填写开发者的email
-                    }
-                }
-                scm {
-                    connection gitUrl
-                    developerConnection gitUrl
-                    url siteUrl
-                }
-            }
+        pom.project {
+            name 'social-lint'
+            packaging 'aar'
+            description 'Lint代码检查'
+            url 'http://192.168.3.1:8081/nexus/content/repositories/android/'//仓库地址
+            groupId "com.tuotuo.solo"
+            artifactId "tuoSoloLint"
+            version "0.0.0.3"
         }
     }
-}
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-}
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-bintray {
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
-    configurations = ['archives']
-    pkg {
-        repo = "maven"
-        name = "qjoy_lintrules" //发布到JCenter上的项目名字
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        licenses = ["BSD"]
-        publish = true
-    }
+
 }
