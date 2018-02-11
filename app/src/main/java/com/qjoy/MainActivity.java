@@ -13,7 +13,6 @@ import java.util.ArrayList;
 
 import qjoy.com.myapplication.R;
 
-
 public class MainActivity extends LintCheckRightAppAcompatActivity {
 
 	@SuppressWarnings("unused")
